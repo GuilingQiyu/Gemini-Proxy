@@ -182,30 +182,10 @@ def stream_generator(response, model_name: str) -> Generator[str, None, None]:
             if not chunk.text:
                 continue
             
-            yield f"data: {json.dumps({
-                'id': response_id,
-                'object': 'chat.completion.chunk',
-                'created': int(time.time()),
-                'model': model_name,
-                'choices': [{
-                    'index': 0,
-                    'delta': {'content': chunk.text},
-                    'finish_reason': None
-                }]
-            })}\n\n"
+            yield f"data: {json.dumps({'id': response_id,'object': 'chat.completion.chunk','created': int(time.time()), 'model': model_name,'choices': [{'index': 0,'delta': {'content': chunk.text},'finish_reason': None}]})}\n\n"
         
         # 发送完成信号
-        yield f"data: {json.dumps({
-            'id': response_id,
-            'object': 'chat.completion.chunk',
-            'created': int(time.time()),
-            'model': model_name,
-            'choices': [{
-                'index': 0,
-                'delta': {},
-                'finish_reason': 'stop'
-            }]
-        })}\n\n"
+        yield f"data: {json.dumps({ 'id': response_id, 'object': 'chat.completion.chunk','created': int(time.time()),'model': model_name,'choices': [{'index': 0,'delta': {},'finish_reason': 'stop'}] })}\n\n"
         
         yield "data: [DONE]\n\n"
     except Exception as e:
